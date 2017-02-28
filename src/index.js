@@ -3,7 +3,8 @@ import React3 from 'react-three-renderer';
 import * as THREE from 'three';
 import ReactDOM from 'react-dom';
 
-import Shader from './shader.js';
+import ShaderAsChild from './shaderAsChild.js';
+import ShaderAsProps from './shaderAsProps.js';
 
 class Simple extends React.Component {
   constructor(props, context) {
@@ -28,10 +29,15 @@ class Simple extends React.Component {
         ),
         time: this.state.time + 0.05,
         uniformsAsChild: this.uniformsAsChild.uniforms.time.value,
-        uniformsAsProps: this.uniformsAsProps.uniforms.time.value,        
+        uniformsAsProps: this.uniformsAsProps.uniforms.time.value,
       });
+      
     };
 
+  }
+
+  componentDidMount() {
+    // console.log();
   }
 
   render() {
@@ -40,8 +46,8 @@ class Simple extends React.Component {
 
     return (<div>
       <div className="uniform-log">
-        <div>uniformAsChild time value: {this.state.uniformsAsChild}</div>
-        <div>uniformAsProps time value: {this.state.uniformsAsProps}</div>
+        <div>uniformsAsChild time value: {this.state.uniformsAsChild} </div>
+        <div>uniformsAsProps time value: {this.state.uniformsAsProps} </div>
       </div>
       <React3
         mainCamera="camera"
@@ -69,8 +75,8 @@ class Simple extends React.Component {
               depth={1}
             />
             <shaderMaterial
-              vertexShader={Shader.vertex}
-              fragmentShader={Shader.fragment}
+              vertexShader={ShaderAsChild.vert}
+              fragmentShader={ShaderAsChild.frag}
               ref={(el) => { this.uniformsAsChild = el; }}
             >
               <uniforms>
@@ -88,12 +94,10 @@ class Simple extends React.Component {
               depth={1}
             />
             <shaderMaterial
-              vertexShader={Shader.vertex}
-              fragmentShader={Shader.fragment}
-              uniforms={{
-                time: { type: 'f', value: this.state.time }
-              }}
+              vertexShader={ShaderAsProps.vert}
+              fragmentShader={ShaderAsProps.frag}
               ref={(el) => { this.uniformsAsProps = el; }}
+              uniforms={{ time: { value: this.state.time } }}
             />
           </mesh>
         </scene>
